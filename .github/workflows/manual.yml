@@ -24,11 +24,21 @@ jobs:
         echo "libiya " >> countries.txt
         echo "amerique " >> countries.txt
 
-    -  name: Check if country exists
-       run: |
+    - name: Check if country exists
+      id: check_country
+      run: |
         country_input="${{ inputs.country }}"
         if grep -q "^$country_input" countries.txt; then
-         echo "Country $country_input exists"
+          echo "Country $country_input exists"
+          echo "$country_input" > country_result.txt
         else
-         echo "Country $country_input does not exist"
+          echo "Country $country_input does not exist"
+          echo "Country $country_input does not exist" > country_result.txt
+          exit 1
         fi
+
+    - name: Upload country result
+      uses: actions/upload-artifact@v2
+      with:
+        name: country-result
+        path: country_result.txt
