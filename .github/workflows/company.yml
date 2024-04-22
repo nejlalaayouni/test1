@@ -1,0 +1,36 @@
+name: Manual workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      company:
+        description: 'company'
+        default: ''
+        required: true
+        type: string
+
+jobs:
+  check_company:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create file with company data
+      run: |
+        echo "com-and-dev " > company.sh
+        echo "grandeur-nature" >> company.sh
+        echo " solutions-jardins" >> company.sh
+        echo "concept-amserv " >> company.sh
+        chmod +x company.sh  
+    - name: show company 
+      id: show_company
+      run: |
+          ./company.sh > company_result.txt
+
+    - name: Upload company result
+      uses: actions/upload-artifact@v2
+      with:
+        name: company-result
+        path: company_result.txt
