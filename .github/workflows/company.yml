@@ -27,8 +27,7 @@ jobs:
 
     - name: Show companies
       run: |
-        ./company.sh
-
+         bash company.sh
     - name: Search company in file
       id: search_company
       run: |
