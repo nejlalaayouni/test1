@@ -34,15 +34,16 @@ jobs:
       run: |
         company_input="${{ inputs.company }}"
         if grep -q "$company_input" company.sh; then
-          echo "Company $company_input exists"
+          echo "Company $company_input exists" >  company-result.txt
         else
-          echo "Company $company_input does not exist"
+          echo "Company $company_input does not exist" >  company-result.txt
           exit 1
         fi
 
     - name: Upload company result
       if: steps.search_company.outcome == 'success'  # Upload result only if the search was successful
+    - name: Upload company result
       uses: actions/upload-artifact@v2
       with:
         name: company-result
-        path: company.sh
+        path: company_result.txt
