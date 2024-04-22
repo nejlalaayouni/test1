@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       company:
-        description: 'company'
+        description: 'Company'
         default: ''
         required: true
         type: string
@@ -19,30 +19,30 @@ jobs:
 
     - name: Create file with company data
       run: |
-        echo "com-and-dev " > company.sh
+        echo "com-and-dev" > company.sh
         echo "grandeur-nature" >> company.sh
-        echo " solutions-jardins" >> company.sh
-        echo "concept-amserv " >> company.sh
-        chmod +x company.sh  
-    - name: show company 
-      id: show_company
+        echo "solutions-jardins" >> company.sh
+        echo "concept-amserv" >> company.sh
+        chmod +x company.sh
+
+    - name: Show companies
       run: |
-          ./company.sh
+        ./company.sh
+
     - name: Search company in file
       id: search_company
       run: |
         company_input="${{ inputs.company }}"
         if grep -q "$company_input" company.sh; then
           echo "Company $company_input exists"
-          echo "Company $company_input exists" > company_result.txt
         else
           echo "Company $company_input does not exist"
-          echo "Company $company_input does not exist" > company_result.txt
           exit 1
         fi
 
     - name: Upload company result
+      if: steps.search_company.outcome == 'success'  # Upload result only if the search was successful
       uses: actions/upload-artifact@v2
       with:
         name: company-result
-        path: company_result.txt
+        path: company.sh
