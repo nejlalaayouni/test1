@@ -19,7 +19,8 @@ jobs:
 
     - name: Create file with company data
       run: |
-        echo "com-and-dev" > company.sh
+        echo "#!/bin/bash" > company.sh
+        echo "com-and-dev" >> company.sh
         echo "grandeur-nature" >> company.sh
         echo "solutions-jardins" >> company.sh
         echo "concept-amserv" >> company.sh
