@@ -23,6 +23,8 @@ jobs:
 
       - name: Create and execute shell script
         run: |
-          echo "echo 'Hello world from shell script'" > myscript.sh
+
+          echo "echo 'bonjour'" > myscript.sh
+
           chmod +x myscript.sh
           ./myscript.sh
