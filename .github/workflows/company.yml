@@ -27,8 +27,7 @@ jobs:
         chmod +x company.sh
 
     - name: Show companies
-      run: |
-         bash company.sh
+      run:  ./company.sh
     - name: Search company in file
       id: search_company
       run: |
