@@ -27,7 +27,7 @@ jobs:
     - name: show company 
       id: show_company
       run: |
-          ./company.sh > company_result.txt
+          ./company.sh
     - name: Search company in file
       id: search_company
       run: |
