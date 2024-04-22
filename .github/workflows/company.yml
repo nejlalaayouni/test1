@@ -26,8 +26,9 @@ jobs:
         echo "concept-amserv" >> company.sh
         chmod +x company.sh
 
-    - name: Show companies
-      run:  ./company.sh
+    -  name: Show companies
+       run: |
+        cat company.sh
     - name: Search company in file
       id: search_company
       run: |
