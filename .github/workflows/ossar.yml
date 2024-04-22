@@ -7,11 +7,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # You can also specify other operating systems like windows-latest or macos-latest
-
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
       
       - name: Print a message
         run: echo "This workflow is running on a shared runner."
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create and execute shell script
+        run: |
+          echo "echo 'bonjour'" > myscript.sh
+          chmod +x myscript.sh
+          ./myscript.sh
