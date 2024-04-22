@@ -19,16 +19,16 @@ jobs:
 
     - name: Create file with countries data
       run: |
-        echo "tunis - Données de la Tunisie" > countries.txt
-        echo "france - Données de la France" >> countries.txt
-        echo "libiya - Données de la Libye" >> countries.txt
-        echo "amerique - Données de l'Amérique" >> countries.txt
+        echo "tunis " > countries.txt
+        echo "france " >> countries.txt
+        echo "libiya " >> countries.txt
+        echo "amerique " >> countries.txt
 
-    - name: Check if country exists
-      run: |
+    -  name: Check if country exists
+       run: |
         country_input="${{ inputs.country }}"
-        if grep -q "^$country_input$" countries.txt; then
-          echo "Country $country_input exists"
+        if grep -q "^$country_input" countries.txt; then
+         echo "Country $country_input exists"
         else
-          echo "Country $country_input does not exist"
+         echo "Country $country_input does not exist"
         fi
