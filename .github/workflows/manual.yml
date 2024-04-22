@@ -3,42 +3,42 @@ name: Manual workflow
 on:
   workflow_dispatch:
     inputs:
-      country:
-        description: 'Country'
+      company:
+        description: 'company'
         default: ''
         required: true
         type: string
 
 jobs:
-  check_country:
+  check_company:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Create file with countries data
+    - name: Create file with company data
       run: |
-        echo "tunis " > countries.txt
-        echo "france " >> countries.txt
-        echo "libiya " >> countries.txt
-        echo "amerique " >> countries.txt
+        echo "com-and-dev " > company.txt
+        echo "grandeur-nature" >> company.txt
+        echo " solutions-jardins" >> company.txt
+        echo "concept-amserv " >> company.txt
 
-    - name: Check if country exists
-      id: check_country
+    - name: Check if company exists
+      id: check_company
       run: |
-        country_input="${{ inputs.country }}"
-        if grep -q "^$country_input" countries.txt; then
-          echo "Country $country_input exists"
-          echo "$country_input" > country_result.txt
+        company_input="${{ inputs.company }}"
+        if grep -q "^$company_input" company.txt; then
+          echo "company $company_input exists"
+          echo "$company_input" > company_result.txt
         else
-          echo "Country $country_input does not exist"
-          echo "Country $country_input does not exist" > country_result.txt
+          echo "company $company_input does not exist"
+          echo "company $company_input does not exist" > company_result.txt
           exit 1
         fi
 
-    - name: Upload country result
+    - name: Upload company result
       uses: actions/upload-artifact@v2
       with:
-        name: country-result
-        path: country_result.txt
+        name: company-result
+        path: company_result.txt
