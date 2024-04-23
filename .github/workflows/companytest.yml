@@ -1,4 +1,3 @@
-
 name: Manual workflow
 
 on:
@@ -11,15 +10,22 @@ on:
         type: string
 
 jobs:
-  check_company:
+  execute_rake_task:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Execute Rake task for specific company
-      run: RAILS_ENV=dev_it bundle exec rake "am:sqlite[${{ inputs.company }}]" > company-result.zip
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Upload company result
-      uses: actions/upload-artifact@v2
+    - name: Set up Ruby environment
+      uses: ruby/setup-ruby@v1
       with:
-        name: company-result
-        path: company-result.txt
+        ruby-version: 2.7.x
+
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install
+
+    - name: Execute Rake task for specific company
+      run: RAILS_ENV=dev_it bundle exec rake "am:sqlite[${{ github.event.inputs.company }}]"
