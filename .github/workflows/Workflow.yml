@@ -1,13 +1,11 @@
 name: Test Workflow
 
+
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    types: [open]
     branches:
-      - main
+      - '*'
+    types: [opened, reopened, synchronize]
 
 jobs:
   build:
