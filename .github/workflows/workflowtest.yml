@@ -5,10 +5,12 @@ on:
       job_name:
         description: 'Select job to execute'
         required: true
-        default: 'test && build'  # Set default value to 'test && build'
+        default: 'test '  # Set default value to 'test && build'
         options:
+         
+          - 'test ' 
+          - 'build'  # Use single quotes to denote a single input option
           - 'deploy'
-          - 'test && build'  # Use single quotes to denote a single input option
 
 jobs:
   test:
