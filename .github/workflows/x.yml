@@ -43,7 +43,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == 'all' }}
+    if: ${{ github.event.inputs.job_name == 'deploy'  }}
     needs: build  # Dépend du job 'build' pour s'assurer qu'il s'exécute en premier si nécessaire
     steps:
       - name: Checkout repository
