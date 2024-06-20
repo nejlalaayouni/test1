@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'test1'
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.branch }}
+
+    - name: Deploy to Environment
+      run: |
+        echo "Deploying branch ${{ github.event.inputs.branch }} to the ${{ github.event.inputs.environment }} environment"
+        # Ajoutez ici les commandes nécessaires pour déployer votre application
+        if [ "${{ github.event.inputs.environment }}" == "staging" ]; then
+          echo "Deploying to staging..."
+          # Ajoutez vos commandes de déploiement pour staging ici
+        elif [ "${{ github.event.inputs.environment }}" == "production" ]; then
+          echo "Deploying to production..."
+          # Ajoutez vos commandes de déploiement pour production ici
+        fi
