@@ -30,7 +30,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'test && build' }}
-    needs: ${{ github.event.inputs.job_name == 'test && build' ? 'test' : '' }}
+    needs: 'test' 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
