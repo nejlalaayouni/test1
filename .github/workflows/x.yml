@@ -1,4 +1,4 @@
-name:  Execution Workflow
+name: Dynamic Job Execution Workflow
 
 on:
   workflow_dispatch:
@@ -6,16 +6,17 @@ on:
       job_name:
         description: 'Select job to execute'
         required: true
-        default: 'test'  # Définit la valeur par défaut à 'test'
+        default: 'all'  # Définit la valeur par défaut à 'all'
         options:
           - 'test'
           - 'build'
           - 'deploy'
+          - 'all'  # Option pour exécuter tous les jobs
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == '' }}
+    if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == 'all' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -28,7 +29,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'test' || github.event.inputs.job_name == '' }}
+    if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'all' }}
     needs: test  # Dépend du job 'test' pour s'assurer qu'il s'exécute en premier si nécessaire
     steps:
       - name: Checkout repository
@@ -42,7 +43,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == '' }}
+    if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == 'all' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
