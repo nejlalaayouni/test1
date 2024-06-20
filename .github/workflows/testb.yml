@@ -1,4 +1,4 @@
-name: test Workflow  avec steps
+name: Dynamic Job Execution Workflow
 
 on:
   workflow_dispatch:
@@ -12,11 +12,9 @@ on:
           - 'test && build'  # Use single quotes to denote a single input option
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'test && build' }}
-    #needs: deploy  # Ensure 'deploy' job completes successfully before running
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -30,7 +28,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'test && build' }}
-    needs: test  # Ensure 'deploy' job completes successfully before running
+    needs: test  # Ensure 'test' job completes successfully before running
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -41,10 +39,10 @@ jobs:
       - name: Build application
         run: echo "Building application"
   
-deploy:
+  deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == 'test && build' }}
-    needs: build && test
+    needs: [test, build]  # Ensure 'test' and 'build' jobs complete successfully before running
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
