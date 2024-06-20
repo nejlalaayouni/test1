@@ -11,11 +11,12 @@ on:
           - 'test'
           - 'build'  # Use single quotes to denote a single input option
           - 'deploy'
+          - 'test && build'
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'deploy' }}
+    if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == 'test && build' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -28,8 +29,8 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'deploy' }}
-    needs: test  # Ensure 'test' job completes successfully before running
+    if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'test && build' }}
+    needs: ${{ github.event.inputs.job_name == 'test && build' ? 'test' : '' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -43,7 +44,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'deploy' }}
-    needs: [test, build]  # Ensure 'test' and 'build' jobs complete successfully before running
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
