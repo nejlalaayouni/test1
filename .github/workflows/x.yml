@@ -12,7 +12,7 @@ on:
           - 'all'  # Option pour exécuter tous les jobs
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == 'all' }}
     steps:
@@ -23,12 +23,25 @@ jobs:
         run: echo "Hello from test"
 
       - name: Run tests
-        run: echo "Running tests"
+        run: echo "Running build"
 
-  build:
+  prepare_test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'all' }}
-    needs: test  # Dépend du job 'test' pour s'assurer qu'il s'exécute en premier si nécessaire
+    if: ${{ github.event.inputs.job_name == 'prepare_test' || github.event.inputs.job_name == 'all' }}
+    needs: build  # Dépend du job 'build' pour s'assurer qu'il s'exécute en premier si nécessaire
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Hello from build
+        run: echo "Hello from build"
+
+      - name: Build application
+        run: echo "Building application"
+  rspec_test:     
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'rspec_test' || github.event.inputs.job_name == 'all' }}
+    needs:  prepare_test  # Dépend du job 'build' pour s'assurer qu'il s'exécute en premier si nécessaire
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
