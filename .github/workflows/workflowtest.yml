@@ -6,12 +6,12 @@ on:
       job_name:
         description: 'Select job to execute'
         required: true
-        default: 'test'  # Set default value to 'test'
+        default: 'test'  # Définit la valeur par défaut à 'test'
         options:
           - 'test'
-          - 'build'  # Use single quotes to denote a single input option
+          - 'build'
           - 'deploy'
-          - 'test && build'
+          - 'test && build'  # Option pour exécuter test et build en parallèle
 
 jobs:
   test:
@@ -30,7 +30,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'test && build' }}
-    needs: 'test' 
+    needs: test  # Dépend du job 'test' pour s'assurer qu'il s'exécute en premier
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -40,10 +40,11 @@ jobs:
 
       - name: Build application
         run: echo "Building application"
-  
+
   deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'deploy' }}
+    needs: [test, build]  # Dépend des jobs 'test' et 'build' pour s'assurer qu'ils s'exécutent en premier
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
