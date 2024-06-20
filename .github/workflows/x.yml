@@ -1,4 +1,4 @@
-name:  Job Execution Workflow
+name: Job Execution Workflow
 
 on:
   workflow_dispatch:
@@ -11,12 +11,13 @@ on:
           - 'test'
           - 'build'
           - 'deploy'
+          - 'test && build'  # Option pour exécuter à la fois 'test' et 'build'
           - 'all'  # Option pour exécuter tous les jobs
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == 'all' }}
+    if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == 'test && build' || github.event.inputs.job_name == 'all' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -29,7 +30,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'all' }}
+    if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'test && build' || github.event.inputs.job_name == 'all' }}
     needs: test  # Dépend du job 'test' pour s'assurer qu'il s'exécute en premier si nécessaire
     steps:
       - name: Checkout repository
@@ -44,6 +45,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == 'all' }}
+    needs: [test, build]  # Ensure 'test' and 'build' jobs complete successfully before running
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
