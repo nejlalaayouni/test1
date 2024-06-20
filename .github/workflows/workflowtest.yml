@@ -1,21 +1,21 @@
-name: test les steps
+name: Dynamic Job Execution Workflow
+
 on:
   workflow_dispatch:
     inputs:
       job_name:
         description: 'Select job to execute'
         required: true
-        default: 'test '  # Set default value to 'test && build'
+        default: 'test'  # Set default value to 'test'
         options:
-         
-          - 'test ' 
+          - 'test'
           - 'build'  # Use single quotes to denote a single input option
           - 'deploy'
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'test && build' }}
+    if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'deploy' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'test && build' }}
+    if: ${{ github.event.inputs.job_name == 'build' || github.event.inputs.job_name == 'deploy' }}
     needs: test  # Ensure 'test' job completes successfully before running
     steps:
       - name: Checkout repository
@@ -42,8 +42,8 @@ jobs:
   
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == 'test && build' }}
-    #needs: ${{ github.event.inputs.job_name == 'test && build'   }}  # Ensure 'test' and 'build' jobs complete successfully before running, if needed
+    if: ${{ github.event.inputs.job_name == 'deploy' }}
+    needs: [test, build]  # Ensure 'test' and 'build' jobs complete successfully before running
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
