@@ -1,0 +1,67 @@
+name: Job Execution Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_name:
+        description: 'Select job to execute'
+        required: true
+        default: 'all'  # Définit la valeur par défaut à 'all'
+        options:
+          - 'deploy'
+          - 'all'  # Option pour exécuter tous les jobs
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'test' || github.event.inputs.job_name == 'all' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Hello from test
+        run: echo "Hello from test"
+
+      - name: Run tests
+        run: echo "Running build"
+
+  prepare_test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'prepare_test' || github.event.inputs.job_name == 'all' }}
+    needs: build  # Dépend du job 'build' pour s'assurer qu'il s'exécute en premier si nécessaire
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Hello from build
+        run: echo "Hello from build"
+
+      - name: Build application
+        run: echo "Building application"
+  rspec_test:     
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'rspec_test' || github.event.inputs.job_name == 'all' }}
+    needs:  prepare_test  # Dépend du job 'build' pour s'assurer qu'il s'exécute en premier si nécessaire
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Hello from build
+        run: echo "Hello from build"
+
+      - name: Build application
+        run: echo "Building application"
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'deploy'  }}
+  
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Hello from deploy
+        run: echo "Hello from deploy"
+
+      - name: Deploy to production
+        run: echo "Deploying to production environment"
