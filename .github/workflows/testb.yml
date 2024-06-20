@@ -8,7 +8,7 @@ on:
         required: true
         default: 'test && build'  # Set default value to 'test && build'
         options:
-          - deploy
+          - 'deploy'
           - 'test && build'  # Use single quotes to denote a single input option
 
 jobs:
