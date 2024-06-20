@@ -1,4 +1,4 @@
-name: Dynamic Job Execution Workflow
+name: test Workflow  avec steps
 
 on:
   workflow_dispatch:
@@ -10,24 +10,13 @@ on:
         options:
           - 'deploy'
           - 'test && build'  # Use single quotes to denote a single input option
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'deploy' }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      
-      - name: Hello from deploy
-        run: echo "Hello from deploy"
 
-      - name: Deploy to production
-        run: echo "Deploying to production environment"
+jobs:
 
   test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'test && build' || github.event.inputs.job_name == 'test' }}
-    needs: deploy  # Ensure 'deploy' job completes successfully before running
+    if: ${{ github.event.inputs.job_name == 'test && build' }}
+    #needs: deploy  # Ensure 'deploy' job completes successfully before running
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -40,8 +29,8 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.job_name == 'test && build' || github.event.inputs.job_name == 'build' }}
-    needs: deploy  # Ensure 'deploy' job completes successfully before running
+    if: ${{ github.event.inputs.job_name == 'test && build' }}
+    needs: test  # Ensure 'deploy' job completes successfully before running
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -51,3 +40,17 @@ jobs:
 
       - name: Build application
         run: echo "Building application"
+  
+deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == 'test && build' }}
+    needs: build && test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Hello from deploy
+        run: echo "Hello from deploy"
+
+      - name: Deploy to production
+        run: echo "Deploying to production environment"
