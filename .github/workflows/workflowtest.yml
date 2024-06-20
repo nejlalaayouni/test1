@@ -42,7 +42,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == 'test && build' }}
-    needs: ${{ github.event.inputs.job_name == 'test && build' ? ['test', 'build'] : [] }}  # Ensure 'test' and 'build' jobs complete successfully before running, if needed
+    needs: 'test' && 'build'   # Ensure 'test' and 'build' jobs complete successfully before running, if needed
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
