@@ -8,8 +8,6 @@ on:
         required: true
         default: 'all'  # Définit la valeur par défaut à 'all'
         options:
-          - 'test'
-          - 'build'
           - 'deploy'
           - 'all'  # Option pour exécuter tous les jobs
 
