@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'test1'  # Exemple de branche par défaut
+  push:
+    branches-ignore:
+      - main
+    
+
+jobs:
+  check_company:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create file with company data
+      run: |
+        echo "#!/bin/bash" > company.sh
+        echo "com-and-dev" >> company.sh
+        echo "grandeur-nature" >> company.sh
+        echo "solutions-jardins" >> company.sh
+        echo "concept-amserv" >> company.sh
+        chmod +x company.sh
+
+    -  name: Show companies
+       run: |
+        cat company.sh
+    - name: Search company in file
+      id: search_company
+      run: |
+        company_input="${{ inputs.company }}"
+        if grep -q "$company_input" company.sh; then
+          echo "Company $company_input exists" > company-result.txt
+        else
+          echo "Company $company_input does not exist" > company-result.txt
+          exit 1
+        fi
+
+    - name: Upload company result
+      if: steps.search_company.outcome == 'success'
+      uses: actions/upload-artifact@v2
+      with:
+        name: company-result
+        path: company-result.txt
