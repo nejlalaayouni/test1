@@ -1,4 +1,4 @@
-name: Dynamic Job Execution Workflow
+name:  Execution Workflow
 
 on:
   workflow_dispatch:
