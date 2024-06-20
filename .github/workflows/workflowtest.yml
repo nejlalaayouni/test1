@@ -1,0 +1,54 @@
+name: Dynamic Job Execution Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_name:
+        description: 'Select job to execute'
+        required: true
+        default: 'test && build'  # Set default value to 'test && build'
+        options:
+          - 'deploy'
+          - 'test && build'  # Use single quotes to denote a single input option
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'test && build' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Hello from test
+        run: echo "Hello from test"
+
+      - name: Run tests
+        run: echo "Running tests"
+
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'test && build' }}
+    needs: test  # Ensure 'test' job completes successfully before running
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Hello from build
+        run: echo "Hello from build"
+
+      - name: Build application
+        run: echo "Building application"
+  
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.job_name == 'deploy' || github.event.inputs.job_name == 'test && build' }}
+    needs: ${{ github.event.inputs.job_name == 'test && build' ? ['test', 'build'] : [] }}  # Ensure 'test' and 'build' jobs complete successfully before running, if needed
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Hello from deploy
+        run: echo "Hello from deploy"
+
+      - name: Deploy to production
+        run: echo "Deploying to production environment"
