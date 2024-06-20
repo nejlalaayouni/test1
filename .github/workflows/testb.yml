@@ -10,7 +10,6 @@ on:
         options:
           - 'deploy'
           - 'test && build'  # Use single quotes to denote a single input option
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
