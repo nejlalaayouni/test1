@@ -1,24 +1,15 @@
-name: Manual Dispatch Workflow
+name: Example Workflow
 
 on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Name of the person'
-        required: true
-        default: 'John Doe'
-      deployment:
-        description: 'Deployment environment'
+      environment:
+        description: 'Environment to deploy to'
         required: true
         default: 'production'
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Print greeting
-      run: echo "Hello, ${{ github.event.inputs.name }}! Deploying to ${{ github.event.inputs.deployment }} environment."
